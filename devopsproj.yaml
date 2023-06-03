@@ -1,0 +1,48 @@
+# Namespace definition
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: devopsprojectns
+
+---
+
+# Deployment definition
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devopsprojectdeploy
+  namespace: devopsprojectns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devopsapp
+  template:
+    metadata:
+      labels:
+        app: devopsapp
+    spec:
+      containers:
+        - name: devopscon
+          image: prathap25256/devopsprojectimg:latest
+          ports:
+            - containerPort: 8080
+
+---
+
+# Service definition
+apiVersion: v1
+kind: Service
+metadata:
+  name: devopssvc
+  namespace: devopsprojectns
+spec:
+  type: NodePort
+  selector:
+    app: devopsapp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30001
+
